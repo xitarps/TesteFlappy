@@ -10,6 +10,9 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 
 import java.awt.Color;
 import java.util.Random;
@@ -109,6 +112,10 @@ public class TesteFlappy extends ApplicationAdapter
     private boolean tocoufundoTela = false;
 
     private OrthographicCamera camera;
+    private Viewport viewport;
+
+    private final float VIRTUAL_WIDTH = 1080;
+    private final float VIRTUAL_HEIGHT = 1920;
 	
 	@Override
 	public void create ()
@@ -122,7 +129,10 @@ public class TesteFlappy extends ApplicationAdapter
 	@Override
 	public void render ()
     {
-     //limpaTela();
+     camera.update();
+     limpaTela();
+
+     batch.setProjectionMatrix(camera.combined);
 	 batch.begin();
 
 	 if(estadoDoJogo==0)
@@ -183,6 +193,11 @@ public class TesteFlappy extends ApplicationAdapter
         som.dispose();
 	}
 
+    @Override
+    public void resize(int width, int height) {
+        viewport.update(width,height);
+    }
+
     public void definindoConfiguracoesDoJogo()
     {
         //metadeDaTelaReal = (float) (ScreenSizeY/ScreenSizeY/1.65);
@@ -215,8 +230,16 @@ public class TesteFlappy extends ApplicationAdapter
 
         fundo = new Texture("fundo.png");
 
-        ScreenSizeX=Gdx.graphics.getWidth();
-        ScreenSizeY=Gdx.graphics.getHeight();
+        //ScreenSizeX=Gdx.graphics.getWidth();
+        //ScreenSizeY=Gdx.graphics.getHeight();
+
+        ScreenSizeX = VIRTUAL_WIDTH;
+        ScreenSizeY = VIRTUAL_HEIGHT;
+
+        camera = new OrthographicCamera();
+        camera.position.set(VIRTUAL_WIDTH/2,VIRTUAL_HEIGHT/2,0);
+
+        viewport = new FitViewport(VIRTUAL_WIDTH,VIRTUAL_HEIGHT,camera);
 
 
 
